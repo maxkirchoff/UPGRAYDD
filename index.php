@@ -2,7 +2,7 @@
 // CONF
 if (! file_exists('conf.php'))
 {
-    die("You need a conf.php, bro.");
+    die("You need a conf.php, brocoder.");
 }
 require_once('conf.php');
 ?>
