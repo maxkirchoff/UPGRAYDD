@@ -49,7 +49,7 @@ require_once('conf.php');
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
-    $file = $_POST['file'];
+    $file = urldecode($_POST['file']);
     $file_type = 'sfx';
 
     $payload = json_encode(array(
@@ -82,7 +82,7 @@ else
 
     foreach ($sfxes as $sfx)
     {
-        echo "<a class='button' href=" . $sfx['file_path'] . ">" . $sfx['name'] . "</a>";
+        echo "<a class='button' href=" . urlencode($sfx['file_path']) . ">" . $sfx['name'] . "</a>";
     }
 }
 ?>
