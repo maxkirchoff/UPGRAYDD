@@ -14,9 +14,8 @@ require_once('conf.php');
         a.button {
             background:#000;
             color: #fff;
-            float: left;
             padding: 10px;
-            margin: 10px;
+            margin: 100px;
         }
 
         -->
@@ -52,16 +51,15 @@ require_once('conf.php');
                 });
                 event.preventDefault();
             });
-
-
         });
 
+        // Refresh Queue
+        setTimeout("location.reload(true);", 60000);
 
     </script>
 </head>
 <body>
-<a class='button control' href='skip'>SKIP</a>
-<a class='button' href="#" onClick="window.open('/queue.php','mywindow','width=500,height=1000')">SONG QUEUE</a>
+<a class='button control' href='skip'>SKIP CURRENTLY PLAYING SONG</a>
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
@@ -97,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 }
 else
 {
-    $process = curl_init($host . "/artist?_relations=song");
+    $process = curl_init($host . "/queue");
     curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
     curl_setopt($process, CURLOPT_USERPWD, $username . ":" . $password);
     curl_setopt($process, CURLOPT_TIMEOUT, 30);
@@ -105,18 +103,15 @@ else
     $return = curl_exec($process);
     curl_close($process);
 
-    $artists_with_songs = json_decode($return, true);
+    $queued_songs = json_decode($return, true);
 
     // loop with all the songs
-    foreach ($artists_with_songs as $artist_with_songs)
+    echo "<h1>Songs in the Play Queue</h1><ol class='song-queue'>";
+    foreach ($queued_songs as $queued_song)
     {
-        echo "<hr style='clear:both;margin-top:10px;' /><h1><a name='{$artist_with_songs['name']}'>{$artist_with_songs['name']}</a></h1>";
-        foreach ($artist_with_songs['song'] as $song)
-        {
-            echo "<a class='button audio' href=" . urlencode($song['file_path']) . ">" . $song['name'] . "</a>";
-        }
-        echo "<br /><br />";
+        echo "<li>{$queued_song['artist']} - {$queued_song['name']}</li>";
     }
+    echo "</ol>";
 }
 ?>
 </body></html>
