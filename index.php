@@ -1,5 +1,8 @@
 <?php
 require('request.php');
+$request = new Request_Thingy();
+require('api.php');
+$api = new API_Thingy();
 
 // Check for POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -11,15 +14,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         {
             case "play":
                 // play action gets played
-                play(urldecode($_POST['file']), $_POST['file_type']);
+                $request->play(urldecode($_POST['file']), $_POST['file_type']);
                 break;
             case "queue":
                 // queue action gets queued
-                queue(urldecode($_POST['file']), $_POST['file_type']);
+                $request->queue(urldecode($_POST['file']), $_POST['file_type']);
                 break;
             case "control":
                 // control action only has skip right now, so skip
-                skip();
+                $request->skip();
                 break;
         }
     }
@@ -40,6 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             margin: 10px;
         }
 
+        #upload {
+            clear: both;
+            margin: 30px;
+        }
         -->
     </style>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
@@ -82,14 +89,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     </script>
 </head>
 <body>
-NAV: <a href="#sfx">SFX</a> | <a href="#songs">SONGS</a>
+NAV: <a href="#sfx">SFX</a> | <a href="#songs">SONGS</a> | <a href="#" onClick="window.open('/queue.php','mywindow','width=500,height=1000')">SONG QUEUE</a>
+<br />
+UPLOAD: <a href="#"  onClick="window.open('/upload.php?type=sfx','sfx_upload','width=400,height=200')">SFX</a> | <a href="#"  onClick="window.open('/upload.php?type=song','song_upload','width=400,height=200')">SONG</a>
 <a name="sfx"></a>
 <h2>SFX</h2>
 <div id="sfx">
     <?php
 
     // get all the sfxes
-    $sfxes = get_sfxes();
+    $sfxes = $request->get_sfxes();
 
     // Loop through to build the list
     foreach ($sfxes as $sfx)
@@ -109,7 +118,7 @@ NAV: <a href="#sfx">SFX</a> | <a href="#songs">SONGS</a>
     <?php
 
     // get all the songs sorted by artist
-    $artists_with_songs = get_artists_with_songs();
+    $artists_with_songs = $request->get_artists_with_songs();
 
     // loop with all the artists
     foreach ($artists_with_songs as $artist_with_songs)
