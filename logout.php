@@ -3,4 +3,4 @@
 setcookie("username");
 setcookie("password");
 
-header('Location: /');
+header('Location: index.php');

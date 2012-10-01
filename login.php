@@ -4,7 +4,7 @@ $request = new Request_Thingy();
 
 if (! empty($_COOKIE['username']) || ! empty($_COOKIE['password']))
 {
-    header('Location: /');
+    header('Location: index.php');
 }
 
 if (isset($_GET['username']) && isset($_GET['password']))
@@ -27,7 +27,7 @@ if (isset($_GET['username']) && isset($_GET['password']))
         setcookie("username", $username);
         setcookie("password", $password);
 
-        header('Location: /');
+        header('Location: index.php');
     }
     catch (Exception $e)
     {

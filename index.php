@@ -7,7 +7,7 @@ if ((! isset($_COOKIE['username'])) || (! isset($_COOKIE['password'])))
 
 if (empty($_COOKIE['username']) && (empty($_COOKIE['password'])))
 {
-    header('Location: /login.php');
+    header('Location: login.php');
 }
 
 require('request.php');
