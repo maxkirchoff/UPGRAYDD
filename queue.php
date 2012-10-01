@@ -19,7 +19,7 @@ require('request.php');
             // Capture the skip requests
             $('a.control').click( function (event) {
                 $.ajax({
-                    url: '/',
+                    url: 'index.php',
                     type: 'POST',
                     dataType: 'json',
                     data: { action: 'control'}

@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $('a.song').click( function (event) {
                 var filename = $(this).attr('href');
                 $.ajax({
-                    url: '/',
+                    url: 'index.php',
                     type: 'POST',
                     dataType: 'json',
                     data: { action: 'queue', file: filename, file_type: 'song' },
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $('a.control').click( function (event) {
                 var filename = $(this).attr('href');
                 $.ajax({
-                    url: '/',
+                    url: 'index.php',
                     type: 'POST',
                     dataType: 'json',
                     data: { action: 'control'},
