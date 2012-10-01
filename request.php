@@ -1,6 +1,39 @@
 <?php
+require('api.php');
+
 class Request_Thingy
 {
+    protected $credentials;
+
+    /**
+     * Credential setter
+     *
+     * @param array $credentials
+     */
+    function set_credentials($credentials = array())
+    {
+        if (array_key_exists('username', $credentials))
+        {
+            $this->credentials['username'] = $credentials['username'];
+        }
+
+        if (array_key_exists('password', $credentials))
+        {
+            $this->credentials['password'] = $credentials['password'];
+        }
+    }
+
+    function check_credentials()
+    {
+        $api = new API_Thingy($this->credentials);
+        $cred_check = $api->get('validatecredential');
+
+        if (in_array('Unauthorized', $cred_check))
+        {
+            throw new Exception("Invalid Credentials");
+        }
+    }
+
     /**
      * Grabs all the songs wrapped in their associated artist
      *
@@ -10,7 +43,7 @@ class Request_Thingy
     {
         $endpoint = 'artist?_relations=song';
 
-        $api = new API_Thingy();
+        $api = new API_Thingy($this->credentials);
         return $api->get($endpoint);
     }
 
@@ -23,7 +56,7 @@ class Request_Thingy
     {
         $endpoint = 'sfx';
 
-        $api = new API_Thingy();
+        $api = new API_Thingy($this->credentials);
         return $api->get($endpoint);
     }
 
@@ -36,7 +69,7 @@ class Request_Thingy
     {
         $endpoint = 'queue';
 
-        $api = new API_Thingy();
+        $api = new API_Thingy($this->credentials);
         return $api->get($endpoint);
     }
 
@@ -61,7 +94,7 @@ class Request_Thingy
         $payload = array(
             "control" => $action
         );
-        $api = new API_Thingy();
+        $api = new API_Thingy($this->credentials);
         return $api->post($endpoint, $payload);
     }
 
@@ -80,7 +113,7 @@ class Request_Thingy
             "file_type" => $file_type,
         );
 
-        $api = new API_Thingy();
+        $api = new API_Thingy($this->credentials);
         $api->post($endpoint, $payload);
     }
 
@@ -99,7 +132,7 @@ class Request_Thingy
             "file_type" => $file_type,
         );
 
-        $api = new API_Thingy();
+        $api = new API_Thingy($this->credentials);
         $api->post($endpoint, $payload);
     }
 }

@@ -1,6 +1,16 @@
 <?php
 class API_Thingy
 {
+    protected $credentials;
+
+    function __construct($credentials = array())
+    {
+        if (! empty($credentials))
+        {
+            $this->credentials = $credentials;
+        }
+    }
+
     /**
      * Grab our config
      *
@@ -50,7 +60,7 @@ class API_Thingy
         {
             $process = curl_init($api_url);
             curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-            curl_setopt($process, CURLOPT_USERPWD, $config['username'] . ":" . $config['password']);
+            curl_setopt($process, CURLOPT_USERPWD, $this->credentials['username'] . ":" . $this->credentials['password']);
             curl_setopt($process, CURLOPT_TIMEOUT, 30);
             curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
 

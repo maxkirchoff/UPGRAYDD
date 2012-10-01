@@ -1,8 +1,24 @@
 <?php
+if ((! isset($_COOKIE['username'])) || (! isset($_COOKIE['password'])))
+{
+    setcookie("username");
+    setcookie("password");
+}
+
+if (empty($_COOKIE['username']) && (empty($_COOKIE['password'])))
+{
+    header('Location: /login.php');
+}
+
 require('request.php');
 $request = new Request_Thingy();
-require('api.php');
-$api = new API_Thingy();
+
+$cred_array = array(
+    "username"  =>  $_COOKIE['username'],
+    "password"  =>  $_COOKIE['password']
+);
+
+$request->set_credentials($cred_array);
 
 // Check for POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -41,11 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             float: left;
             padding: 10px;
             margin: 10px;
-        }
-
-        #upload {
-            clear: both;
-            margin: 30px;
         }
         -->
     </style>
