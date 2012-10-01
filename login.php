@@ -85,7 +85,7 @@ elseif (isset($_GET['email']))
         ?>
         Email: <input type="text" name="email"></input><br /><br />
         *must be a shopigniter.com email address.
-        <input type="submit" value="Login" />
+        <input type="submit" value="Create Account" />
     </form>
 </div>
 </body>

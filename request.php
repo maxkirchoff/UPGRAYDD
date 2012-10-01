@@ -30,7 +30,7 @@ class Request_Thingy
             $api = new API_Thingy();
             $response = $api->post('createcredential', array("email" => $email_address));
 
-            if (! array_key_exists("email", $response))
+            if (! array_key_exists("identifier", $response))
             {
                 $response = false;
             }
