@@ -100,9 +100,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     </script>
 </head>
 <body>
-NAV: <a href="#sfx">SFX</a> | <a href="#songs">SONGS</a> | <a href="#" onClick="window.open('/queue.php','mywindow','width=500,height=1000')">SONG QUEUE</a>
+NAV: <a href="#sfx">SFX</a> | <a href="#songs">SONGS</a> | <a href="#" onClick="window.open('queue.php','mywindow','width=500,height=1000')">SONG QUEUE</a>
 <br />
-UPLOAD: <a href="#"  onClick="window.open('/upload.php?type=sfx','sfx_upload','width=400,height=200')">SFX</a> | <a href="#"  onClick="window.open('/upload.php?type=song','song_upload','width=400,height=200')">SONG</a>
+UPLOAD: <a href="#"  onClick="window.open('upload.php?type=sfx','sfx_upload','width=400,height=200')">SFX</a> | <a href="#"  onClick="window.open('upload.php?type=song','song_upload','width=400,height=200')">SONG</a>
 <a name="sfx"></a>
 <h2>SFX</h2>
 <div id="sfx">
