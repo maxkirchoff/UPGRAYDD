@@ -51,7 +51,7 @@ if (isset($_GET['username']) && isset($_GET['password']))
 <body>
 <div id="login">
     <h2>You must log in.</h2>
-    <form action="/login.php">
+    <form action="login.php">
         <?php
             if (isset($invalid_login))
             {
