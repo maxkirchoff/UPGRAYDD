@@ -35,17 +35,32 @@ require('request.php');
 <a class='button control' href='skip'>SKIP CURRENTLY PLAYING SONG</a>
 <?php
 
+$request = new Request_Thingy();
+
+$cred_array = array(
+    "username"  =>  $_COOKIE['username'],
+    "password"  =>  $_COOKIE['password']
+);
+
+$request->set_credentials($cred_array);
+
 // Grab the queued songs
-$queued_songs = get_song_queue();
+$queued_songs = $request->get_song_queue();
 
 echo "<h1>Songs in the Play Queue</h1><ol class='song-queue'>";
 
 // loop with all the songs
-foreach ($queued_songs as $queued_song)
+if (! array_key_exists("__error", $queued_songs))
 {
-    echo "<li>{$queued_song['artist']} - {$queued_song['name']}</li>";
+    foreach ($queued_songs as $queued_song)
+    {
+        echo "<li>{$queued_song['artist']} - {$queued_song['name']}</li>";
+    }
 }
-
+else
+{
+    print_r($queued_songs['__error']);
+}
 echo "</ol>";
 
 ?>

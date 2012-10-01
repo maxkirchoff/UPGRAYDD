@@ -23,6 +23,22 @@ class Request_Thingy
         }
     }
 
+    function create_account($email_address)
+    {
+        if (isset($email_address))
+        {
+            $api = new API_Thingy();
+            $response = $api->post('createcredential', array("email" => $email_address));
+
+            if (! array_key_exists("email", $response))
+            {
+                $response = false;
+            }
+        }
+
+        return isset($response) ? $response : false;
+    }
+
     function check_credentials()
     {
         $api = new API_Thingy($this->credentials);

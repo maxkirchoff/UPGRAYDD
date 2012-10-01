@@ -60,7 +60,10 @@ class API_Thingy
         {
             $process = curl_init($api_url);
             curl_setopt($process, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-            curl_setopt($process, CURLOPT_USERPWD, $this->credentials['username'] . ":" . $this->credentials['password']);
+            if (! empty($this->credentials))
+            {
+                curl_setopt($process, CURLOPT_USERPWD, $this->credentials['username'] . ":" . $this->credentials['password']);
+            }
             curl_setopt($process, CURLOPT_TIMEOUT, 30);
             curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
 
