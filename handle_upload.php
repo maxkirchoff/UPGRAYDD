@@ -53,7 +53,13 @@ function send_file($file_path, $type)
         $payload['file-data'] = base64_encode($file_contents);
     }
 
-    $api = new API_Thingy();
+    // Loads creds from cookie
+    $cred_array = array(
+        "username"  =>  $_COOKIE['username'],
+        "password"  =>  $_COOKIE['password']
+    );
+
+    $api = new API_Thingy($cred_array);
     $api->post($type, $payload);
 }
 
