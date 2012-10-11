@@ -49,17 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 <!DOCTYPE HTML>
 <html>
 <head>
-    <style>
-        <!--
-        a.button {
-            background:#000;
-            color: #fff;
-            float: left;
-            padding: 10px;
-            margin: 10px;
-        }
-        -->
-    </style>
+    <link href="css/style.css" rel="stylesheet" type="text/css">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready( function() {
