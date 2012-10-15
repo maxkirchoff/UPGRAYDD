@@ -1,8 +1,13 @@
 <?php
+// cURL API wrapper class
 class API_Thingy
 {
+    // credentials we need
     protected $credentials;
 
+    /**
+     * @param array $credentials
+     */
     function __construct($credentials = array())
     {
         if (! empty($credentials))
@@ -30,14 +35,33 @@ class API_Thingy
         return $config;
     }
 
+    /**
+     * @param string $endpoint
+     * @return mixed|null
+     */
     function get($endpoint = '')
     {
         return $this->api($endpoint, "GET");
     }
 
+    /**
+     * @param string $endpoint
+     * @param array $payload
+     * @return mixed|null
+     */
     function post($endpoint = '', $payload = array())
     {
         return $this->api($endpoint, "POST", $payload);
+    }
+
+    /**
+     * @param string $endpoint
+     * @param array $payload
+     * @return mixed|null
+     */
+    function patch($endpoint = '', $payload = array())
+    {
+        return $this->api($endpoint, "PATCH", $payload);
     }
 
     /**
@@ -67,10 +91,21 @@ class API_Thingy
             curl_setopt($process, CURLOPT_TIMEOUT, 30);
             curl_setopt($process, CURLOPT_RETURNTRANSFER, TRUE);
 
-            if ($method == "POST" && (! empty($payload)))
+            switch($method)
             {
-                curl_setopt($process, CURLOPT_POST, 1);
+                case "POST":
+                    curl_setopt($process, CURLOPT_POST, 1);
+                    break;
+                case "PATCH":
+                    curl_setopt($process, CURLOPT_CUSTOMREQUEST, $method);
+                    break;
+                case "PUT":
+                    curl_setopt($process, CURLOPT_CUSTOMREQUEST, $method);
+                    break;
+            }
 
+            if (! empty($payload))
+            {
                 $encoded_payload = json_encode($payload);
                 curl_setopt($process, CURLOPT_POSTFIELDS, $encoded_payload);
             }

@@ -1,24 +1,6 @@
 <?php
-if ((! isset($_COOKIE['username'])) || (! isset($_COOKIE['password'])))
-{
-    setcookie("username");
-    setcookie("password");
-}
-
-if (empty($_COOKIE['username']) && (empty($_COOKIE['password'])))
-{
-    header('Location: login.php');
-}
-
-require('request.php');
-$request = new Request_Thingy();
-
-$cred_array = array(
-    "username"  =>  $_COOKIE['username'],
-    "password"  =>  $_COOKIE['password']
-);
-
-$request->set_credentials($cred_array);
+require_once('request.php');
+require_once('account.php');
 
 // Check for POST
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -38,7 +20,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 break;
             case "control":
                 // control action only has skip right now, so skip
-                $request->skip();
+                $request->song_control(urldecode($_POST['value']));
+                break;
+            case "volume":
+                // request that we change the volume
+                $request->set_volume(urldecode($_POST['value']));
                 break;
         }
     }
@@ -56,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $('a.sfx').click( function (event) {
                 var filename = $(this).attr('href');
                 $.ajax({
-                    url: 'index.php',
+                    url: 'main_controller.php',
                     type: 'POST',
                     dataType: 'json',
                     data: { action: 'play', file: filename, file_type: 'sfx' },
@@ -67,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
             $('a.song').click( function (event) {
                 var filename = $(this).attr('href');
                 $.ajax({
-                    url: 'index.php',
+                    url: 'main_controller.php',
                     type: 'POST',
                     dataType: 'json',
                     data: { action: 'queue', file: filename, file_type: 'song' },
@@ -75,14 +61,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 });
                 event.preventDefault();
             });
-            $('a.control').click( function (event) {
-                var filename = $(this).attr('href');
+            // Capture the skip requests
+            $('a.song-control').click( function (event) {
+                var control = $(this).attr('href');
                 $.ajax({
-                    url: 'index.php',
+                    url: 'main_controller.php',
                     type: 'POST',
                     dataType: 'json',
-                    data: { action: 'control'},
-                    error: function() { }
+                    data: { action: 'control', value: control }
+                });
+                event.preventDefault();
+            });
+            // Capture the skip requests
+            $('a.volume').click( function (event) {
+                var volume = $(this).attr('href');
+                $.ajax({
+                    url: 'main_controller.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { action: 'volume', value: volume }
                 });
                 event.preventDefault();
             });
@@ -90,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     </script>
 </head>
 <body>
-NAV: <a href="#sfx">SFX</a> | <a href="#songs">SONGS</a> | <a href="#" onClick="window.open('queue.php','mywindow','width=500,height=1000')">SONG QUEUE</a>
+NAV: <a href="#sfx">SFX</a> | <a href="#songs">SONGS</a> | <a href="#" onClick="window.open('queue.php','mywindow','width=500,height=1000')">SONG QUEUE</a> | <a href="account.php?logout">LOGOUT</a>
 <br />
 UPLOAD: <a href="#"  onClick="window.open('upload.php?type=sfx','sfx_upload','width=400,height=200')">SFX</a> | <a href="#"  onClick="window.open('upload.php?type=song','song_upload','width=400,height=200')">SONG</a>
 <a name="sfx"></a>
@@ -113,10 +110,33 @@ UPLOAD: <a href="#"  onClick="window.open('upload.php?type=sfx','sfx_upload','wi
 <a name="songs"></a>
 <h2>SONGS</h2>
 <div id="songs">
-    <h3>Controls</h3>
-    <a class='button control' href='skip'>SKIP</a>
     <a class='button' href="#" onClick="window.open('/queue.php','mywindow','width=500,height=1000')">SONG QUEUE</a>
     <?php
+
+    $controls = $request->get_controls();
+
+    ?>
+    <hr style="clear:both;" />
+    <h3>Volume Controls</h3>
+    <?php
+    if (isset($controls['volume']) && is_array($controls['volume']))
+    {
+        foreach ($controls['volume'] as $vol_option)
+        {
+            echo "<a class='button volume' href='{$vol_option}'>{$vol_option}</a>";
+        }
+    }
+    ?>
+    <hr style="clear:both;" />
+    <h3>Song Controls</h3>
+    <?php
+    if (isset($controls['song']) && is_array($controls['song']))
+    {
+        foreach ($controls['song'] as $song_control)
+        {
+            echo "<a class='button song-control' href='{$song_control}'>{$song_control}</a>";
+        }
+    }
 
     // get all the songs sorted by artist
     $artists_with_songs = $request->get_artists_with_songs();

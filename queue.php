@@ -1,5 +1,6 @@
 <?php
-require('request.php');
+require_once('request.php');
+require_once('account.php');
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -17,12 +18,24 @@ require('request.php');
     <script type="text/javascript">
         $(document).ready( function() {
             // Capture the skip requests
-            $('a.control').click( function (event) {
+            $('a.song-control').click( function (event) {
+                var control = $(this).attr('href');
                 $.ajax({
                     url: 'index.php',
                     type: 'POST',
                     dataType: 'json',
-                    data: { action: 'control'}
+                    data: { action: 'control', value: control }
+                });
+                event.preventDefault();
+            });
+            // Capture the skip requests
+            $('a.volume').click( function (event) {
+                var volume = $(this).attr('href');
+                $.ajax({
+                    url: 'index.php',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: { action: 'volume', value: volume }
                 });
                 event.preventDefault();
             });
@@ -32,17 +45,30 @@ require('request.php');
     </script>
 </head>
 <body>
-<a class='button control' href='skip'>SKIP CURRENTLY PLAYING SONG</a>
 <?php
 
-$request = new Request_Thingy();
+$controls = $request->get_controls();
 
-$cred_array = array(
-    "username"  =>  $_COOKIE['username'],
-    "password"  =>  $_COOKIE['password']
-);
-
-$request->set_credentials($cred_array);
+?>
+<h4>Volume Controls</h4>
+<?php
+if (isset($controls['volume']) && is_array($controls['volume']))
+{
+    foreach ($controls['volume'] as $vol_option)
+    {
+        echo "<a class='button volume' href='{$vol_option}'>{$vol_option}</a>";
+    }
+}
+?>
+<h4>Song Controls</h4>
+<?php
+if (isset($controls['song']) && is_array($controls['song']))
+{
+    foreach ($controls['song'] as $song_control)
+    {
+        echo "<a class='button song-control' href='{$song_control}'>{$song_control}</a>";
+    }
+}
 
 // Grab the queued songs
 $queued_songs = $request->get_song_queue();
