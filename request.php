@@ -23,6 +23,10 @@ class Request_Thingy
         }
     }
 
+    /**
+     * @param $email_address
+     * @return bool|mixed|null
+     */
     function create_account($email_address)
     {
         if (isset($email_address))
@@ -39,6 +43,9 @@ class Request_Thingy
         return isset($response) ? $response : false;
     }
 
+    /**
+     * @throws Exception
+     */
     function check_credentials()
     {
         $api = new API_Thingy($this->credentials);
@@ -90,11 +97,34 @@ class Request_Thingy
     }
 
     /**
-     * Skip the currently playing song
+     * Get available controls and volume
+     *
+     * @return mixed|null
      */
-    function skip()
+    function get_controls()
     {
-        $this->control('skip');
+        $endpoint = 'control';
+
+        $api = new API_Thingy($this->credentials);
+        return $api->get($endpoint);
+    }
+
+    /**
+     * Set the volume
+     *
+     * @param int $volume
+     * @return mixed|null
+     */
+    function set_volume($volume = 0)
+    {
+        $endpoint = 'control';
+
+        $payload = array(
+            "volume" => $volume
+        );
+
+        $api = new API_Thingy($this->credentials);
+        return $api->patch($endpoint, $payload);
     }
 
     /**
@@ -103,15 +133,15 @@ class Request_Thingy
      * @param string $action
      * @return mixed|null
      */
-    function control($action = 'skip')
+    function song_control($action = 'skip')
     {
-        $endpoint = 'queue';
+        $endpoint = 'control';
 
         $payload = array(
-            "control" => $action
+            "song" => $action
         );
         $api = new API_Thingy($this->credentials);
-        return $api->post($endpoint, $payload);
+        return $api->patch($endpoint, $payload);
     }
 
     /**
