@@ -62,9 +62,23 @@ class Request_Thingy
      *
      * @return mixed|null
      */
-    function get_artists_with_songs()
+    function get_artists()
     {
-        $endpoint = 'artist?_relations=song';
+        $endpoint = 'artist';
+
+        $api = new API_Thingy($this->credentials);
+        return $api->get($endpoint);
+    }
+
+    /**
+     * Grabs all the songs wrapped in their album for a specific artist
+     *
+     * @param $artist_id
+     * @return mixed|null
+     */
+    function get_artist_albums($artist_id = 0)
+    {
+        $endpoint = "artist/{$artist_id}/album?_relations=song,album_cover";
 
         $api = new API_Thingy($this->credentials);
         return $api->get($endpoint);

@@ -139,18 +139,31 @@ UPLOAD: <a href="#"  onClick="window.open('upload.php?type=sfx','sfx_upload','wi
     }
 
     // get all the songs sorted by artist
-    $artists_with_songs = $request->get_artists_with_songs();
+    $artists = $request->get_artists();
 
     // loop with all the artists
-    foreach ($artists_with_songs as $artist_with_songs)
+    foreach ($artists as $artist)
     {
         // echo the artist info
-        echo "<hr style='clear:both;margin-top:10px;' /><h3><a name='{$artist_with_songs['name']}'>{$artist_with_songs['name']}</a></h3>";
+        echo "<hr style='clear:both;margin-top:10px;' /><h3><a name='{$artist['name']}'>{$artist['name']}</a></h3>";
 
+
+        $albums = $request->get_artist_albums($artist['id']);
         // loop through the songs under that artist
-        foreach ($artist_with_songs['song'] as $song)
+        foreach ($albums as $album)
         {
-            echo "<a class='button song' href=" . urlencode($song['file_path']) . ">" . $song['name'] . "</a>";
+            echo "<hr style='clear:both;margin-top:10px;' />";
+
+            if (isset($album['album_cover']['file_path']))
+            {
+                echo "<img src='http://10.44.111.111/uploads/{$album['album_cover']['file_path']}' align='left' />";
+            }
+            echo "<h4>{$album['name']}</h4>";
+
+            foreach ($album['song'] as $song)
+            {
+                echo "<a class='button song' href=" . urlencode($song['file_path']) . ">" . $song['name'] . "</a>";
+            }
         }
         echo "<br /><br />";
     }
