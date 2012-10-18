@@ -139,33 +139,44 @@ UPLOAD: <a href="#"  onClick="window.open('upload.php?type=sfx','sfx_upload','wi
     }
 
     // get all the songs sorted by artist
-    $artists = $request->get_artists();
+    $artists = $request->get_artists_with_everything();
 
     // loop with all the artists
     foreach ($artists as $artist)
     {
         // echo the artist info
-        echo "<hr style='clear:both;margin-top:10px;' /><h3><a name='{$artist['name']}'>{$artist['name']}</a></h3>";
+        echo "<hr style='clear:both;margin-top:40px; height:27px; border: 0px; background-image: url(img/starz.gif);' />";
+        echo "<h2><a name='{$artist['name']}'>{$artist['name']}</a></h2><div class='artist'>";
 
-
-        $albums = $request->get_artist_albums($artist['id']);
-        // loop through the songs under that artist
-        foreach ($albums as $album)
+        if (isset($artist['album']))
         {
-            echo "<hr style='clear:both;margin-top:10px;' />";
-
-            if (isset($album['album_cover']['file_path']))
+            // loop through the songs under that artist
+            foreach ($artist['album'] as $album)
             {
-                echo "<img src='http://10.44.111.111/uploads/{$album['album_cover']['file_path']}' align='left' />";
-            }
-            echo "<h4>{$album['name']}</h4>";
+                echo "<hr style='clear:both;margin-top:10px;' />";
+                echo "<div class='album' style='background: lightgray; margin-bottom: 10px;'>";
 
-            foreach ($album['song'] as $song)
-            {
-                echo "<a class='button song' href=" . urlencode($song['file_path']) . ">" . $song['name'] . "</a>";
+
+                /**
+                 * This is bogging down load right now
+                if (isset($album['album_cover']['file_path']))
+                {
+                    echo "<img src='http://10.44.111.111/uploads/{$album['album_cover']['file_path']}' align='left' />";
+                }
+                 */
+
+                echo "<h4>{$album['name']}</h4>";
+
+                foreach ($album['song'] as $song)
+                {
+                    echo "<a class='button song' href=" . urlencode($song['file_path']) . ">" . $song['name'] . "</a>";
+                }
+
+                echo "</div>";
             }
         }
-        echo "<br /><br />";
+
+        echo "</div>";
     }
     ?>
 </div>

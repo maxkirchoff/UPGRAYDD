@@ -71,6 +71,19 @@ class Request_Thingy
     }
 
     /**
+     * Grabs all the songs wrapped in their associated artists and albums and cover art
+     *
+     * @return mixed|null
+     */
+    function get_artists_with_everything()
+    {
+        $endpoint = 'artist?_recursive=true';
+
+        $api = new API_Thingy($this->credentials);
+        return $api->get($endpoint);
+    }
+
+    /**
      * Grabs all the songs wrapped in their album for a specific artist
      *
      * @param $artist_id
