@@ -25,7 +25,9 @@ require_once('account.php');
                     type: 'POST',
                     dataType: 'json',
                     data: { action: 'control', value: control }
-                });
+                }).done(function() {
+                            location.reload(true);
+                        });
                 event.preventDefault();
             });
             // Capture the skip requests
@@ -36,6 +38,8 @@ require_once('account.php');
                     type: 'POST',
                     dataType: 'json',
                     data: { action: 'volume', value: volume }
+                }).done(function() {
+                      location.reload(true);
                 });
                 event.preventDefault();
             });
@@ -50,11 +54,11 @@ require_once('account.php');
 $controls = $request->get_controls();
 
 ?>
-<h4>Volume Controls</h4>
+<h4>Volume Controls | Current Volume: <?php if(isset($controls['volume']['current'])) { ?><span style="text-decoration: blink; color: red;"><?php echo $controls['volume']['current']; ?></span><?php } ?></h4>
 <?php
-if (isset($controls['volume']) && is_array($controls['volume']))
+if (isset($controls['volume']['set']) && is_array($controls['volume']['set']))
 {
-    foreach ($controls['volume'] as $vol_option)
+    foreach ($controls['volume']['set'] as $vol_option)
     {
         echo "<a class='button volume' href='{$vol_option}'>{$vol_option}</a>";
     }

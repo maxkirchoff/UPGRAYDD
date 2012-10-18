@@ -117,11 +117,12 @@ UPLOAD: <a href="#"  onClick="window.open('upload.php?type=sfx','sfx_upload','wi
 
     ?>
     <hr style="clear:both;" />
-    <h3>Volume Controls</h3>
+    <h3>Volume Controls | Current Volume: <?php if(isset($controls['volume']['current'])) { ?><span style="text-decoration: blink; color: red;"><?php echo $controls['volume']['current']; ?></span><?php } ?></h3>
+    <blink></blink>
     <?php
-    if (isset($controls['volume']) && is_array($controls['volume']))
+    if (isset($controls['volume']['set']) && is_array($controls['volume']['set']))
     {
-        foreach ($controls['volume'] as $vol_option)
+        foreach ($controls['volume']['set'] as $vol_option)
         {
             echo "<a class='button volume' href='{$vol_option}'>{$vol_option}</a>";
         }
