@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 break;
             case "queue":
                 // queue action gets queued
-                $request->queue(urldecode($_POST['file']), $_POST['file_type']);
+                $request->queue(urldecode($_POST['song_id']));
                 break;
             case "control":
                 // control action only has skip right now, so skip

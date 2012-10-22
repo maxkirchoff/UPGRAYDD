@@ -1,36 +1,6 @@
 <?php
 require_once('request.php');
 require_once('account.php');
-
-// Check for POST
-if ($_SERVER['REQUEST_METHOD'] == 'POST')
-{
-    // Check that we have an action in our post vars
-    if (isset($_POST['action']))
-    {
-        switch ($_POST['action'])
-        {
-            case "play":
-                // play action gets played
-                $request->play(urldecode($_POST['file']), $_POST['file_type']);
-                break;
-            case "queue":
-                // queue action gets queued
-                $request->queue(urldecode($_POST['file']), $_POST['file_type']);
-                break;
-            case "control":
-                // control action only has skip right now, so skip
-                $request->song_control(urldecode($_POST['value']));
-                break;
-            case "volume":
-                // request that we change the volume
-                $request->set_volume(urldecode($_POST['value']));
-                break;
-        }
-    }
-
-    die();
-}
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -51,12 +21,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
                 event.preventDefault();
             });
             $('a.song').click( function (event) {
-                var filename = $(this).attr('href');
+                var song_id = $(this).attr('href');
                 $.ajax({
                     url: 'main_controller.php',
                     type: 'POST',
                     dataType: 'json',
-                    data: { action: 'queue', file: filename, file_type: 'song' },
+                    data: { action: 'queue', song_id: song_id, file_type: 'song' },
                     error: function() { }
                 });
                 event.preventDefault();
@@ -170,7 +140,7 @@ UPLOAD: <a href="#"  onClick="window.open('upload.php?type=sfx','sfx_upload','wi
 
                 foreach ($album['song'] as $song)
                 {
-                    echo "<a class='button song' href=" . urlencode($song['file_path']) . ">" . $song['name'] . "</a>";
+                    echo "<a class='button song' href=" . urlencode($song['id']) . ">" . $song['name'] . "</a>";
                 }
 
                 echo "</div>";

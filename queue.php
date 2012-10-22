@@ -21,7 +21,7 @@ require_once('account.php');
             $('a.song-control').click( function (event) {
                 var control = $(this).attr('href');
                 $.ajax({
-                    url: 'index.php',
+                    url: 'main_controller.php',
                     type: 'POST',
                     dataType: 'json',
                     data: { action: 'control', value: control }
@@ -34,7 +34,7 @@ require_once('account.php');
             $('a.volume').click( function (event) {
                 var volume = $(this).attr('href');
                 $.ajax({
-                    url: 'index.php',
+                    url: 'main_controller.php',
                     type: 'POST',
                     dataType: 'json',
                     data: { action: 'volume', value: volume }
@@ -75,21 +75,20 @@ if (isset($controls['song']) && is_array($controls['song']))
 }
 
 // Grab the queued songs
-$queued_songs = $request->get_song_queue();
+$queue = $request->get_song_queue();
 
-echo "<h1>Songs in the Play Queue</h1><ol class='song-queue'>";
+echo "<h1>Songs in the Play Queue</h1>";
+echo "<ol class='song-queue'>";
 
 // loop with all the songs
-if (! array_key_exists("__error", $queued_songs))
+if (! array_key_exists("__error", $queue))
 {
-    foreach ($queued_songs as $queued_song)
+    foreach ($queue as $queue_item)
     {
-        echo "<li>{$queued_song['artist']} - {$queued_song['name']}</li>";
+        $song_name = isset($queue_item['song']['name']) ? $queue_item['song']['name'] : "";
+        $artist_name = isset($queue_item['song']['album']['artist']['name']) ? $queue_item['song']['album']['artist']['name'] : "Unknown Artist";
+        echo "<li>{$artist_name} - {$song_name}</li>";
     }
-}
-else
-{
-    print_r($queued_songs['__error']);
 }
 echo "</ol>";
 

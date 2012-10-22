@@ -117,7 +117,7 @@ class Request_Thingy
      */
     function get_song_queue()
     {
-        $endpoint = 'queue';
+        $endpoint = 'queue?_recursive=true';
 
         $api = new API_Thingy($this->credentials);
         return $api->get($endpoint);
@@ -193,16 +193,14 @@ class Request_Thingy
     /**
      * Put the file in queue to be played
      *
-     * @param string $file
-     * @param string $file_type
+     * @param int $song_id
      */
-    function queue($file = '', $file_type = 'song')
+    function queue($song_id = 0)
     {
         $endpoint = 'queue';
 
         $payload = array(
-            "file" => $file,
-            "file_type" => $file_type,
+            "file" => $song_id
         );
 
         $api = new API_Thingy($this->credentials);
