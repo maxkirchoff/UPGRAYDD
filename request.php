@@ -200,7 +200,7 @@ class Request_Thingy
         $endpoint = 'queue';
 
         $payload = array(
-            "file" => $song_id
+            "song_id" => $song_id
         );
 
         $api = new API_Thingy($this->credentials);
